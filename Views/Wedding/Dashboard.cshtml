@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+@using WeddingPlanner.Models
+@model List<Wedding>
+
+<partial name="NavPartial"></partial>
+<h1 class="mt-4">Welcome to the Wedding Planner</h1>
+<div class="mt-5 mx-2">
+<h5>You have RSVP'd to @ViewBag.LiveUser.Weddings.Count weddings</h5>
+<table class="table table-bordered table-hover">
+    <thead class="table-danger">
+    <tr>
+        <td class="couple">Couple</td>
+        <td class="day">Date</td>
+        <td>Guest(s)</td>
+        <td class="action">Action</td>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (Wedding w in @Model)
+        {
+        <tr>
+            <td>
+                <a href="/wedding/@w.WeddingId" class="text-info">
+                    @w.WedderOne & @w.WedderTwo
+                </a>
+            </td>
+            <td>@w.Ceremony</td>
+            <td>@w.Guests.Count</td>
+            <td>
+                @if (@w.UserId == @ViewBag.LiveUser.UserId)
+                {
+                    <a href="/delete/@w.WeddingId" class="text-danger">
+                        Delete
+                    </a>
+                }
+                else if (@w.Guests.Any(g => g.UserId == @ViewBag.LiveUser.UserId))
+                {
+                    <a href="/leaving/@w.WeddingId" class="text-warning">
+                        Un-RSVP
+                    </a>
+                }
+                else
+                {
+                    <a href="/accept/@w.WeddingId" class="text-success">
+                        RSVP
+                    </a>
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+</div>
